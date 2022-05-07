@@ -8,10 +8,9 @@ import json
 import pandas as pd
 
 
-
 class TweetData:
     """ Class for retrieving and analyzing FakeNewsNet Twitter data from a specified dataset folder
-    using pandas.DataFrames
+    using.
     """
     index=["gossipcop/real", "gossipcop/fake", "politifact/real", "politifact/fake"]
 
@@ -21,6 +20,7 @@ class TweetData:
         self.analyze_retweet_data()
         self.analyze_follower_data()
         self.analyze_following_data()
+        self.analyze_user_engagement()
     
     def load_data(self, dir):
         if not os.path.isdir("csv/"):
@@ -82,7 +82,7 @@ class TweetData:
             ]
 
         self.key_data = pd.DataFrame(data=data,index=self.index)
-    
+
 
     def analyze_retweet_data(self):
             data = {}
@@ -112,7 +112,7 @@ class TweetData:
                 self.pf_fake_users["retweets"].skew()
             ]
             self.retweet_data = pd.DataFrame(data=data,index=self.index)
-        
+
 
     def analyze_follower_data(self):
             data = {}
@@ -146,6 +146,7 @@ class TweetData:
 
     def analyze_following_data(self):
             data = {}
+            
             data["mean of following/user"] = [
                 self.gc_real_users["following"].mean(),
                 self.gc_fake_users["following"].mean(),
@@ -173,30 +174,44 @@ class TweetData:
             ]
             self.following_data = pd.DataFrame(data=data,index=self.index)
 
+
+    def analyze_user_engagement(self):
+        print(self.gc_fake_users.head())
+        pass
+
     def get_key_data(self):
         return self.key_data
 
     def get_retweet_data(self):
-            return self.retweet_data
+        return self.retweet_data
 
     def get_follower_data(self):
-            return self.follower_data
+        return self.follower_data
 
     def get_following_data(self):
-            return self.following_data
+        return self.following_data
     
-    def get_following_distribution(self):
-        # TODO
-        pass
+    def get_follow_distributions(self):
+        data = {}
+        data["followers"] = [
+                self.gc_real_users["followers"].sum(),
+                self.gc_fake_users["followers"].sum(),
+                self.pf_real_users["followers"].sum(),
+                self.pf_fake_users["followers"].sum()
+        ]
+        data["following"] = [
+                self.gc_real_users["following"].sum(),
+                self.gc_fake_users["following"].sum(),
+                self.pf_real_users["following"].sum(),
+                self.pf_fake_users["following"].sum()
+        ]
+
+        return pd.DataFrame(data=data,index=self.index)
+
     
-    def get_follower_distribution(self):
-        # TODO
-        pass
-
-
 def create_dataframes(path):
     """Returns two dataframes first containing tweets and the second user attributes
-    of the given FakeNewsNet dataset folder ([gossipcop, politifact]/[real,fake]).
+    of the given FakeNewsNet dataset tweet subfolder ([gossipcop, politifact]/[real,fake]).
     """
     tweet_ids =[]
     likes = []

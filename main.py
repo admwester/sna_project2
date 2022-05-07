@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from tweet_analysis import TweetData
 
-def visualize(tweet_data):
+def visualize_key_attributes(tweet_data):
     key_data = tweet_data.get_key_data()
     retweet_data = tweet_data.get_retweet_data()
     follower_data = tweet_data.get_follower_data()
@@ -39,16 +40,52 @@ def visualize(tweet_data):
     table4 = ax[3].table(cellText=following_data.values, rowLabels=following_data.index, colLabels=following_data.columns, loc = "center")
     table4.auto_set_font_size(False)
     table4.set_fontsize(font_size)
-
     fig.tight_layout()
     plt.show()
 
+
+def visualize_follow_distributions(tweet_data):
+    follow_distributions = tweet_data.get_follow_distributions()
+
+    follower_data = tweet_data.get_follower_data()
+    following_data = tweet_data.get_following_data()
+
+    fig, ax = plt.subplots(2,2)
+    ax[0,0].bar(follow_distributions.index[0], follow_distributions["followers"][0], color = 'b')
+    ax[0,0].bar(follow_distributions.index[1], follow_distributions["followers"][1], color = 'r')
+    ax[0,0].bar(follow_distributions.index[2], follow_distributions["followers"][2], color = 'b')
+    ax[0,0].bar(follow_distributions.index[3], follow_distributions["followers"][3], color = 'r')
+    ax[0,0].set_title("Sum of followers")
+
+    ax[0,1].bar(follow_distributions.index[0], follower_data["mean of followers/user"][0], color = 'b')
+    ax[0,1].bar(follow_distributions.index[1], follower_data["mean of followers/user"][1], color = 'r')
+    ax[0,1].bar(follow_distributions.index[2], follower_data["mean of followers/user"][2], color = 'b')
+    ax[0,1].bar(follow_distributions.index[3], follower_data["mean of followers/user"][3], color = 'r')
+    ax[0,1].set_title("Followers per user")
+
+    ax[1,0].bar(follow_distributions.index[0], follow_distributions["following"][0], color = 'b')
+    ax[1,0].bar(follow_distributions.index[1], follow_distributions["following"][1], color = 'r')
+    ax[1,0].bar(follow_distributions.index[2], follow_distributions["following"][2], color = 'b')
+    ax[1,0].bar(follow_distributions.index[3], follow_distributions["following"][3], color = 'r')
+    ax[1,0].set_title("Sum of others followed by users")
+
+    follower_data = tweet_data.get_follower_data()
+    ax[1,1].bar(follow_distributions.index[0], following_data["mean of following/user"][0], color = 'b')
+    ax[1,1].bar(follow_distributions.index[1], following_data["mean of following/user"][1], color = 'r')
+    ax[1,1].bar(follow_distributions.index[2], following_data["mean of following/user"][2], color = 'b')
+    ax[1,1].bar(follow_distributions.index[3], following_data["mean of following/user"][3], color = 'r')
+    ax[1,1].set_title("Others followed per user")
+    plt.show()
 
 def main(dir):
    
     
     tweet_data = TweetData(dir)
-    visualize(tweet_data)
+    
+    visualize_key_attributes(tweet_data)
+    
+    visualize_follow_distributions(tweet_data)
+   
     
 
 
