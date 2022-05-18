@@ -29,7 +29,7 @@ for filename in os.listdir('user_followers'):
             #print(follower)
             if follower not in jobj['followers']:
                 jobj['n_following']+=1
-                #print(jobj['n_following'])
+                #print(jobj['n_following']) 
         jobj['n_followers'] = len(jobj['followers'])
         degreet = jobj['n_followers']+jobj['n_following']
     if str(filename[:-5]) in str(gc_fake):
