@@ -1,4 +1,4 @@
-""" Tools for analyzing Tweets in the FakeNewsNet dataset:  https://github.com/KaiDMML/FakeNewsNet
+""" Tools for analyzing Tweets in the FakeNewsNet dataset:  https://github.com/KaiDMML/FakeNewsNet .
 
 Only the tweet datapoints are processed in this module, thus they contain comprehensive information also about the users.
 """
@@ -7,10 +7,10 @@ import os
 import json
 import pandas as pd
 
+from user_engagement_analysis import countMeanEngagementOfUserList
 
 class TweetData:
-    """ Class for retrieving and analyzing FakeNewsNet Twitter data from a specified dataset folder
-    using.
+    """ Class for retrieving and analyzing FakeNewsNet Twitter data from a specified dataset folder.
     """
     index=["gossipcop/real", "gossipcop/fake", "politifact/real", "politifact/fake"]
 
@@ -20,7 +20,7 @@ class TweetData:
         self.analyze_retweet_data()
         self.analyze_follower_data()
         self.analyze_following_data()
-        self.analyze_user_engagement()
+        self.analyze_user_engagements()
     
     def load_data(self, dir):
         if not os.path.isdir("csv/"):
@@ -175,9 +175,25 @@ class TweetData:
             self.following_data = pd.DataFrame(data=data,index=self.index)
 
 
-    def analyze_user_engagement(self):
-        print(self.gc_fake_users.head())
-        pass
+    def analyze_user_engagements(self):
+        """Analyzes mean user engagements on three specified periods for
+        all user groups.
+
+        P1: 4 months    2022/01 - 2022/04
+        P2: 1 year      2021/05 - 2022/05
+        P3: 3 years     2019/05 - 2022/05
+        """
+        self.user_engagements_P1 = self.analyze_user_engagement_on_timeline("2022-01-01 00:00:00+00:00", "2022-05-01 00:00:00+00:00")
+        self.user_engagements_P2 = self.analyze_user_engagement_on_timeline("2021-05-01 00:00:00+00:00", "2022-05-01 00:00:00+00:00")
+        self.user_engagements_P3 = self.analyze_user_engagement_on_timeline("2019-05-01 00:00:00+00:00", "2022-05-01 00:00:00+00:00")
+
+
+    def analyze_user_engagement_on_timeline(self, x1, x2):
+        user_engagements = {"gc_real" : countMeanEngagementOfUserList(self.gc_real_users["id"], x1 ,x2),
+        "gc_fake" : countMeanEngagementOfUserList(self.gc_fake_users["id"], x1 ,x2),
+        "pf_real" : countMeanEngagementOfUserList(self.pf_real_users["id"], x1 ,x2),
+        "pf_fake" : countMeanEngagementOfUserList(self.pf_fake_users["id"], x1 ,x2)}
+        return user_engagements
 
     def get_key_data(self):
         return self.key_data

@@ -43,8 +43,18 @@ def visualize_key_attributes(tweet_data):
     fig.tight_layout()
     plt.show()
 
+def visualize_user_engagement(data, title):
+    yAxis = [data["gc_real"], data["gc_fake"], data["pf_real"], data["pf_fake"]]
+    xAxis = ["gc_real", "gc_fake", "pf_real", "pf_fake"]
+    plt.title(title)
+    plt.xlabel('User group')
+    plt.ylabel('Mean engagement')
+    plt.bar(xAxis, yAxis, color = ["b", "r", "b", "r"])
+    plt.show()
 
 def visualize_follow_distributions(tweet_data):
+    follow_distributions = tweet_data.get_follow_distributions()
+
     follow_distributions = tweet_data.get_follow_distributions()
 
     follower_data = tweet_data.get_follower_data()
@@ -78,19 +88,12 @@ def visualize_follow_distributions(tweet_data):
     plt.show()
 
 def main(dir):
-   
-    
     tweet_data = TweetData(dir)
-    
     visualize_key_attributes(tweet_data)
-    
     visualize_follow_distributions(tweet_data)
-   
-    
-
-
-
-    
+    visualize_user_engagement(tweet_data.user_engagements_P1, "Mean user engagement 2022/01 - 2022/04")
+    visualize_user_engagement(tweet_data.user_engagements_P2, "Mean user engagement 2021/05 - 2022/05")
+    visualize_user_engagement(tweet_data.user_engagements_P3, "Mean user engagement 2019/05 - 2022/05")    
 
 if __name__ == "__main__":
 
